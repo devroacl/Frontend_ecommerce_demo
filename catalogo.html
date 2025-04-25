@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Mi Tienda</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .product-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .filter-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .price-range {
+            width: 100%;
+            height: 2px;
+        }
+        .category-item {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-item.active {
+            background: #0d6efd !important;
+            color: white !important;
+            border-color: #0d6efd !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Actualizado -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Mi Tienda</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="catalogo.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown">
+                            Categorías
+                        </a>
+                        <ul class="dropdown-menu" id="categoriasDropdown"></ul>
+                    </li>
+                </ul>
+                <form id="searchForm" class="d-flex me-2">
+                    <input class="form-control me-2" type="search" id="searchInput" placeholder="Buscar productos">
+                    <button class="btn btn-outline-light" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+                <div class="d-flex">
+                    <a href="carrito.html" class="btn btn-outline-light position-relative me-2">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCounter" class="badge bg-danger">0</span>
+                    </a>
+                    <div id="authButtons"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row">
+            <!-- Filtros -->
+            <div class="col-lg-3 mb-4">
+                <div class="filter-section">
+                    <h5 class="mb-3"><i class="fas fa-filter"></i> Filtros</h5>
+                    
+                    <div class="mb-4">
+                        <h6>Categorías</h6>
+                        <div id="categoryFilters" class="list-group"></div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6>Precio</h6>
+                        <input type="range" class="form-range price-range" id="priceRange" min="0" max="1000" step="50">
+                        <div id="priceValue" class="text-muted small">Máx: $1000</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6>Ordenar por</h6>
+                        <select id="sortSelect" class="form-select">
+                            <option value="nombre">Nombre</option>
+                            <option value="precio_asc">Precio: Menor a mayor</option>
+                            <option value="precio_desc">Precio: Mayor a menor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Productos -->
+            <div class="col-lg-9">
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h2 class="mb-0">Productos</h2>
+                            <span id="productCount" class="badge bg-primary"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row g-4" id="productsGrid">
+                    <!-- Loading Spinner -->
+                    <div id="loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Manejar autenticación
+            await checkAuthState();
+            
+            // Manejar búsqueda desde URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
+            if(searchQuery) {
+                document.getElementById('searchInput').value = searchQuery;
+                currentFilters.search = searchQuery;
+            }
+
+            // Inicializar filtros
+            await initializeFilters();
+            loadFilteredProducts();
+        });
+
+        // Configuración de filtros
+        let currentFilters = {
+            category: null,
+            maxPrice: 1000,
+            sort: 'nombre',
+            search: ''
+        };
+
+        // Inicializar filtros
+        async function initializeFilters() {
+            // Cargar categorías
+            const categories = await fetch('/api/categorias').then(res => res.json());
+            const categoryFilters = document.getElementById('categoryFilters');
+            categoryFilters.innerHTML = categories.map(cat => `
+                <a href="#" class="list-group-item list-group-item-action category-item" 
+                   data-id="${cat.id}" onclick="toggleCategoryFilter(${cat.id})">
+                    ${cat.nombre}
+                </a>
+            `).join('');
+
+            // Configurar rango de precio
+            document.getElementById('priceRange').addEventListener('input', e => {
+                currentFilters.maxPrice = e.target.value;
+                document.getElementById('priceValue').textContent = `Máx: $${e.target.value}`;
+                loadFilteredProducts();
+            });
+
+            // Configurar ordenamiento
+            document.getElementById('sortSelect').addEventListener('change', e => {
+                currentFilters.sort = e.target.value;
+                loadFilteredProducts();
+            });
+
+            // Configurar buscador
+            document.getElementById('searchForm').addEventListener('submit', e => {
+                e.preventDefault();
+                currentFilters.search = document.getElementById('searchInput').value.trim();
+                window.history.replaceState(null, null, `?search=${currentFilters.search}`);
+                loadFilteredProducts();
+            });
+        }
+
+        // Función para alternar filtro de categoría
+        function toggleCategoryFilter(categoryId) {
+            const items = document.querySelectorAll('.category-item');
+            items.forEach(item => item.classList.remove('active'));
+            
+            if(currentFilters.category === categoryId) {
+                currentFilters.category = null;
+            } else {
+                currentFilters.category = categoryId;
+                document.querySelector(`.category-item[data-id="${categoryId}"]`).classList.add('active');
+            }
+            loadFilteredProducts();
+        }
+
+        // Cargar productos filtrados
+        async function loadFilteredProducts() {
+            try {
+                showLoading(true);
+                
+                let url = `/api/productos?`;
+                url += `maxPrice=${currentFilters.maxPrice}`;
+                if(currentFilters.category) url += `&category=${currentFilters.category}`;
+                if(currentFilters.sort) url += `&sort=${currentFilters.sort}`;
+                if(currentFilters.search) url += `&search=${encodeURIComponent(currentFilters.search)}`;
+
+                const response = await fetch(url);
+                if(!response.ok) throw new Error('Error cargando productos');
+                
+                const productos = await response.json();
+                renderProducts(productos);
+                document.getElementById('productCount').textContent = productos.length;
+            } catch(error) {
+                console.error(error);
+                showAlert('Error al cargar productos', 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Mostrar productos
+        function renderProducts(productos) {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = productos.map(producto => `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card h-100">
+                        <img src="${producto.imagenUrl}" class="card-img-top" alt="${producto.nombre}" 
+                             style="height: 200px; object-fit: contain; padding: 15px;">
+                        <div class="card-body">
+                            <h5 class="card-title">${producto.nombre}</h5>
+                            <p class="card-text text-truncate">${producto.descripcion}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="text-primary mb-0">$${producto.precio.toFixed(2)}</h5>
+                                <button class="btn btn-primary" onclick="addToCart(${producto.id})">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </div>
+                            <a href="producto.html?id=${producto.id}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Mostrar/ocultar loading
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // Función para checkAuthState (desde app.js)
+        async function checkAuthState() {
+            const token = localStorage.getItem('jwt');
+            const authButtons = document.getElementById('authButtons');
+            
+            if(token) {
+                try {
+                    const user = await fetch('/api/auth/profile', {
+                        headers: {'Authorization': `Bearer ${token}`}
+                    }).then(res => res.json());
+                    
+                    authButtons.innerHTML = `
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-2"></i>${user.nombre}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="${user.rol === 'VENDEDOR' ? 'dashboard-vendedor.html' : 'perfil.html'}">
+                                    <i class="fas fa-user-circle me-2"></i>Mi Perfil
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button class="dropdown-item text-danger" onclick="logout()">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                </button></li>
+                            </ul>
+                        </div>
+                    `;
+                } catch(error) {
+                    console.error('Error verificando autenticación:', error);
+                    logout();
+                }
+            } else {
+                authButtons.innerHTML = `
+                    <a href="login.html" class="btn btn-outline-light me-2">Login</a>
+                    <a href="registro.html" class="btn btn-primary">Registro</a>
+                `;
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+        }
+
+        // Funciones del carrito (desde app.js)
+        async function addToCart(productId) {
+            try {
+                const producto = await fetch(`/api/productos/${productId}`).then(res => res.json());
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                const existing = cart.find(item => item.id === productId);
+                if(existing) {
+                    existing.quantity++;
+                } else {
+                    cart.push({...producto, quantity: 1});
+                }
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCounter();
+                showAlert('Producto agregado al carrito', 'success');
+            } catch(error) {
+                showAlert('Error al agregar al carrito', 'danger');
+            }
+        }
+
+        function updateCartCounter() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCounter').textContent = count;
+        }
+
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

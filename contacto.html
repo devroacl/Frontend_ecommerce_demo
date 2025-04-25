@@ -1,0 +1,49 @@
+<!-- Usando estructura base -->
+<main class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Contacto</h2>
+            <form id="contactForm">
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mensaje</label>
+                    <textarea class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Información de Contacto</h5>
+                    <p class="card-text">
+                        📍 Dirección: Calle Principal #123<br>
+                        📞 Teléfono: +1 234 567 890<br>
+                        ✉️ Email: contacto@tienda.com
+                    </p>
+                    <div id="map" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+// Integración básica de Google Maps
+function initMap() {
+    const location = { lat: 40.712776, lng: -74.005974 }; // Nueva York
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: location,
+    });
+    new google.maps.Marker({ position: location, map });
+}
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap"></script>

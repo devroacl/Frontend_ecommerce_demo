@@ -1,0 +1,66 @@
+<!-- Usando estructura base -->
+<main>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Seguimiento de Pedido #<span id="orderId"></span></h3>
+                        <div class="timeline">
+                            <div class="timeline-step active">
+                                <div class="timeline-icon">✓</div>
+                                <div class="timeline-content">
+                                    <h5>Pedido Recibido</h5>
+                                    <p class="text-muted">15 Oct 2023 10:00 AM</p>
+                                </div>
+                            </div>
+                            <!-- Más pasos del timeline -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+    margin: 20px 0;
+}
+
+.timeline-step {
+    position: relative;
+    padding: 20px 0;
+    border-left: 2px solid #dee2e6;
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -15px;
+    top: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline-content {
+    margin-left: 30px;
+}
+
+.timeline-step.active .timeline-icon {
+    background: #0d6efd;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+}
+
+.timeline-step:not(.active) .timeline-icon {
+    background: #dee2e6;
+    color: #6c757d;
+}
+</style>

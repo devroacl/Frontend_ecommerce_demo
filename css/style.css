@@ -1,0 +1,78 @@
+.card-img-top {
+    height: 200px;
+    object-fit: contain;
+    padding: 10px;
+}
+
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+#cartCounter {
+    font-size: 0.75rem;
+}
+
+
+/* Estilos para dashboards */
+.list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Carrusel de producto */
+.carousel-item img {
+    max-height: 500px;
+    object-fit: contain;
+}
+
+/* Estrellas de reseñas */
+.star {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #ddd;
+    transition: color 0.2s;
+}
+
+.star:hover,
+.star.active {
+    color: #ffc107;
+}
+
+/*para personalizar a carrito*/
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+
+/* Estilos para dashboards */
+.list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Carrusel de producto */
+.carousel-item img {
+    max-height: 500px;
+    object-fit: contain;
+}
+
+/* Estrellas de reseñas */
+.star {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #ddd;
+    transition: color 0.2s;
+}
+
+.star:hover,
+.star.active {
+    color: #ffc107;
+}

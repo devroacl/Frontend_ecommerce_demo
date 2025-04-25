@@ -1,0 +1,75 @@
+<!-- Usando estructura base -->
+<main>
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="#dashboard" class="list-group-item list-group-item-action active">Dashboard</a>
+                <a href="#productos" class="list-group-item list-group-item-action">Mis Productos</a>
+                <a href="#pedidos" class="list-group-item list-group-item-action">Pedidos</a>
+                <a href="#estadisticas" class="list-group-item list-group-item-action">Estadísticas</a>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="col-md-9">
+            <!-- Sección Productos -->
+            <div id="productosSection">
+                <div class="d-flex justify-content-between mb-3">
+                    <h3>Mis Productos</h3>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+                        Nuevo Producto
+                    </button>
+                </div>
+                <div id="vendorProducts" class="row"></div>
+            </div>
+
+            <!-- Modal Producto -->
+            <div class="modal fade" id="productModal">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form id="productForm">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Nuevo Producto</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Campos del formulario -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // Cargar productos del vendedor
+    const productos = await fetch('/api/productos/mis-productos', {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+    }).then(res => res.json());
+
+    const productsGrid = document.getElementById('vendorProducts');
+    productsGrid.innerHTML = productos.map(producto => `
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${producto.nombre}</h5>
+                    <p class="card-text">${producto.descripcion}</p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-warning">Editar</button>
+                        <button class="btn btn-sm btn-danger">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+});
+</script>

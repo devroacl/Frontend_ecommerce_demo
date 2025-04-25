@@ -1,0 +1,250 @@
+<!-- En admin-dashboard.html -->
+<div class="modal fade" id="categoryModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="categoryForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nueva Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    loadCategories();
+    
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = {
+            nombre: e.target.querySelector('input').value,
+            descripcion: e.target.querySelector('textarea').value
+        };
+
+        try {
+            const response = await fetch('/api/categorias', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            if (!response.ok) throw new Error('Error guardando categoría');
+            
+            showAlert('Categoría guardada!', 'success');
+            loadCategories();
+            $('#categoryModal').modal('hide');
+        } catch (error) {
+            showAlert(error.message, 'danger');
+        }
+    });
+});
+
+async function loadCategories() {
+    const response = await fetch('/api/categorias');
+    const categorias = await response.json();
+    
+    const tbody = document.querySelector('#categoriesTable tbody');
+    tbody.innerHTML = categorias.map(cat => `
+        <tr>
+            <td>${cat.nombre}</td>
+            <td>${cat.descripcion}</td>
+            <td>
+                <button class="btn btn-sm btn-warning" onclick="editCategory(${cat.id})">Editar</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteCategory(${cat.id})">Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function deleteCategory(id) {
+    if (!confirm('¿Seguro que deseas eliminar esta categoría?')) return;
+    
+    try {
+        const response = await fetch(`/api/categorias/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Error eliminando categoría');
+        
+        showAlert('Categoría eliminada!', 'success');
+        loadCategories();
+    } catch (error) {
+        showAlert(error.message, 'danger');
+    }
+}
+</script>
+
+
+<!-- En admin-dashboard.html -->
+<div class="modal fade" id="categoryModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="categoryForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nueva Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    loadCategories();
+    
+    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = {
+            nombre: e.target.querySelector('input').value,
+            descripcion: e.target.querySelector('textarea').value
+        };
+
+        try {
+            const response = await fetch('/api/categorias', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            if (!response.ok) throw new Error('Error guardando categoría');
+            
+            showAlert('Categoría guardada!', 'success');
+            loadCategories();
+            $('#categoryModal').modal('hide');
+        } catch (error) {
+            showAlert(error.message, 'danger');
+        }
+    });
+});
+
+async function loadCategories() {
+    const response = await fetch('/api/categorias');
+    const categorias = await response.json();
+    
+    const tbody = document.querySelector('#categoriesTable tbody');
+    tbody.innerHTML = categorias.map(cat => `
+        <tr>
+            <td>${cat.nombre}</td>
+            <td>${cat.descripcion}</td>
+            <td>
+                <button class="btn btn-sm btn-warning" onclick="editCategory(${cat.id})">Editar</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteCategory(${cat.id})">Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function deleteCategory(id) {
+    if (!confirm('¿Seguro que deseas eliminar esta categoría?')) return;
+    
+    try {
+        const response = await fetch(`/api/categorias/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Error eliminando categoría');
+        
+        showAlert('Categoría eliminada!', 'success');
+        loadCategories();
+    } catch (error) {
+        showAlert(error.message, 'danger');
+    }
+}
+</script>
+
+<!-- Extensión del dashboard admin -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Gestión de Usuarios</h5>
+        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+            Nuevo Usuario
+        </button>
+    </div>
+    
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="usersList">
+                <!-- Datos cargados dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Usuario -->
+<div class="modal fade" id="userModal">
+    <!-- Contenido del modal -->
+</div>
+
+<script>
+// Cargar usuarios
+async function loadUsers() {
+    const response = await fetch('/api/usuarios', {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+    });
+    
+    const users = await response.json();
+    
+    document.getElementById('usersList').innerHTML = users.map(user => `
+        <tr>
+            <td>${user.nombre}</td>
+            <td>${user.email}</td>
+            <td>${user.rol}</td>
+            <td>
+                <button class="btn btn-sm btn-warning" onclick="editUser(${user.id})">Editar</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+</script>

@@ -1,0 +1,29 @@
+/* Dashboard General */
+.dashboard-card {
+    transition: transform 0.2s;
+    border: none;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Estadísticas */
+.stats-badge {
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 15px;
+}
+
+/* Tablas */
+.dashboard-table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Gráficos */
+.chart-container {
+    height: 400px;
+    position: relative;
+}
