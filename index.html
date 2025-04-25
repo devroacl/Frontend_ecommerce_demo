@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ecommerce</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   
+    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -51,25 +54,635 @@
     <!-- Contenido específico de cada página -->
     <main id="mainContent" class="container my-4"></main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white mt-5">
-        <div class="container py-4">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>Contacto</h5>
-                    <p>Email: info@tienda.com</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Enlaces útiles</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Términos y condiciones</a></li>
-                    </ul>
+    
+
+<!-- codigo para lo demas Main -->
+
+<style>
+    .hero-section {
+        background-color: #f8f9fa;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .product-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        margin-bottom: 1.5rem;
+        height: 100%;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .product-img-container {
+        position: relative;
+        overflow: hidden;
+        padding-top: 133%; /* Aspect ratio 3:4 */
+    }
+    
+    .product-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .wishlist-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .product-card:hover .wishlist-btn {
+        opacity: 1;
+    }
+    
+    .discount-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 3px 8px;
+        font-size: 12px;
+    }
+    
+    .category-badge {
+        font-size: 12px;
+        background-color: #f0f0f0;
+        color: #666;
+        padding: 3px 8px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+    
+    .price-container .original-price {
+        text-decoration: line-through;
+        color: #999;
+        margin-right: 8px;
+    }
+    
+    .price-container .current-price {
+        font-weight: bold;
+        color: #ff4d4d;
+    }
+    
+    .section-title {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #000;
+    }
+    
+    .quick-view-btn {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.7);
+        color: white;
+        text-align: center;
+        padding: 8px;
+        transform: translateY(100%);
+        transition: transform 0.3s;
+    }
+    
+    .product-card:hover .quick-view-btn {
+        transform: translateY(0);
+    }
+    
+    .category-pills {
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .category-pill {
+        flex: 0 0 auto;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 50px;
+        padding: 8px 16px;
+        margin-right: 10px;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .category-pill:hover, .category-pill.active {
+        background-color: #343a40;
+        color: white;
+        border-color: #343a40;
+    }
+    
+    .ratings {
+        color: #ffc107;
+        font-size: 14px;
+    }
+    
+    .ratings .count {
+        color: #6c757d;
+        margin-left: 5px;
+    }
+    
+    @media (max-width: 767.98px) {
+        .hero-section {
+            padding: 2rem 0;
+        }
+        
+        .category-pill {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+
+    <!-- Contenido principal -->
+    <main id="mainContent">
+        <!-- Hero Section / Banner -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="2"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="/api/placeholder/1200/400" class="d-block w-100" alt="Oferta especial">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Descuentos de temporada</h5>
+                                        <p>Hasta 50% de descuento en miles de productos</p>
+                                        <button class="btn btn-dark">Comprar ahora</button>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="/api/placeholder/1200/400" class="d-block w-100" alt="Nuevas colecciones">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Nueva colección</h5>
+                                        <p>Descubre las últimas tendencias</p>
+                                        <button class="btn btn-dark">Ver más</button>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="/api/placeholder/1200/400" class="d-block w-100" alt="Envío gratis">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Envío gratis</h5>
+                                        <p>En compras superiores a $499</p>
+                                        <button class="btn btn-dark">Ver condiciones</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                                <span class="visually-hidden">Siguiente</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="app.js"></script>
+        <!-- Categorías populares -->
+        <section class="container my-5">
+            <h2 class="section-title">Categorías Populares</h2>
+            <div class="category-pills">
+                <div class="category-pill active">Todos</div>
+                <div class="category-pill">Novedades</div>
+                <div class="category-pill">Más vendidos</div>
+                <div class="category-pill">Ropa</div>
+                <div class="category-pill">Calzado</div>
+                <div class="category-pill">Accesorios</div>
+                <div class="category-pill">Belleza</div>
+                <div class="category-pill">Deportes</div>
+                <div class="category-pill">Ofertas</div>
+            </div>
+        </section>
+
+        <!-- Productos destacados -->
+        <section class="container my-5">
+            <h2 class="section-title">Productos destacados</h2>
+            <div class="row">
+                <!-- Producto 1 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 1">
+                            <div class="discount-badge">-25%</div>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Ropa</div>
+                            <h5 class="product-title fs-6 mt-2">Vestido estampado floral</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="count">(42)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="original-price">$599</span>
+                                <span class="current-price">$449</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 2 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 2">
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Calzado</div>
+                            <h5 class="product-title fs-6 mt-2">Zapatillas deportivas</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="count">(87)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="current-price">$899</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 3 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 3">
+                            <div class="discount-badge">-15%</div>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Accesorios</div>
+                            <h5 class="product-title fs-6 mt-2">Bolso de mano elegante</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <span class="count">(23)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="original-price">$799</span>
+                                <span class="current-price">$679</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 4 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 4">
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Belleza</div>
+                            <h5 class="product-title fs-6 mt-2">Set de maquillaje profesional</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="count">(108)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="current-price">$1,299</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 5 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 5">
+                            <div class="discount-badge">-30%</div>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Ropa</div>
+                            <h5 class="product-title fs-6 mt-2">Jeans slim fit</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="count">(56)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="original-price">$749</span>
+                                <span class="current-price">$524</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 6 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 6">
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Accesorios</div>
+                            <h5 class="product-title fs-6 mt-2">Reloj digital deportivo</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="count">(32)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="current-price">$1,499</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 7 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 7">
+                            <div class="discount-badge">-20%</div>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Calzado</div>
+                            <h5 class="product-title fs-6 mt-2">Sandalias de plataforma</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="count">(19)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="original-price">$649</span>
+                                <span class="current-price">$519</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 8 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Producto 8">
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Ropa</div>
+                            <h5 class="product-title fs-6 mt-2">Chaqueta ligera impermeable</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="count">(74)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="current-price">$899</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="catalogo.html" class="btn btn-outline-dark">Ver más productos</a>
+            </div>
+        </section>
+        
+        <!-- Banners promocionales -->
+        <section class="container my-5">
+            <div class="row g-4">
+                <div class="col-12 col-md-6">
+                    <div class="position-relative">
+                        <img src="/api/placeholder/600/300" class="img-fluid" alt="Promoción 1">
+                        <div class="position-absolute top-50 start-0 translate-middle-y p-4">
+                            <h3 class="text-white">Colección de verano</h3>
+                            <p class="text-white mb-3">Nuevos diseños para esta temporada</p>
+                            <button class="btn btn-light">Comprar ahora</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="position-relative">
+                        <img src="/api/placeholder/600/300" class="img-fluid" alt="Promoción 2">
+                        <div class="position-absolute top-50 start-0 translate-middle-y p-4">
+                            <h3 class="text-white">Accesorios en tendencia</h3>
+                            <p class="text-white mb-3">Completa tu look con los mejores complementos</p>
+                            <button class="btn btn-light">Ver colección</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Nuevas llegadas -->
+        <section class="container my-5">
+            <h2 class="section-title">Nuevas Llegadas</h2>
+            <div class="row">
+                <!-- Producto 1 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Nuevo Producto 1">
+                            <div class="discount-badge">NUEVO</div>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Ropa</div>
+                            <h5 class="product-title fs-6 mt-2">Blusa con estampado tropical</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="count">(5)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="current-price">$349</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 2 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Nuevo Producto 2">
+                            <div class="discount-badge">NUEVO</div>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Accesorios</div>
+                            <h5 class="product-title fs-6 mt-2">Sombrero de playa con lazo</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <span class="count">(8)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="current-price">$299</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto 3 -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <div class="product-img-container">
+                            <img src="/api/placeholder/300/400" class="product-img" alt="Nuevo Producto 3">
+                            <div class="discount-badge">NUEVO</div>
+                            <button class="wishlist-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="quick-view-btn">Vista rápida</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="category-badge">Belleza</div>
+                            <h5 class="product-title fs-6 mt-2">Paleta de sombras metálicas</h5>
+                            <div class="ratings">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="count">(12)</span>
+                            </div>
+                            <div class="price-container mt-1">
+                                <span class="current-price">$599</span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mt-2">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="bg-dark text-white mt-5">
+                    <div class="container py-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>Contacto</h5>
+                                <p>Email: info@tienda.com</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Enlaces útiles</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="#" class="text-white">Términos y condiciones</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+                <script src="app.js"></script>
+
 </body>
 </html>
