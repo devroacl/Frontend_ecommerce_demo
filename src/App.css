@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  
+  .App {
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    height: 100%;
+  }
+  

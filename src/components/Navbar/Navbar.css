@@ -1,0 +1,126 @@
+/* Estilos generales de la Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Roboto';
+  }
+  
+  /* Estilos para el logo */
+  .nav-logo img {
+    height: 40px;
+    transition: transform 0.3s ease;
+  }
+  
+  .nav-logo img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Estilos para el menú de navegación */
+  .nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin-left: 5.5rem;
+    padding: 0;
+  }
+  
+  .nav-menu li {
+    position: relative;
+    font-weight: 500;
+    color: #333333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-menu li:hover {
+    color: #28a745;
+  }
+  
+  .nav-menu li::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #28a745;
+    transition: width 0.3s ease;
+  }
+  
+  .nav-menu li:hover::after {
+    width: 100%;
+  }
+  
+  /* Estilos para el área de login/carrito */
+  .nav-login-cart {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .nav-login-cart button {
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #28a745;
+    background-color: transparent;
+    color: #28a745;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-login-cart button:hover {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .nav-login-cart img {
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .nav-login-cart img:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Estilos responsivos para tablets */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 1rem;
+    }
+  
+    .nav-menu {
+      gap: 1rem;
+    }
+  
+    .nav-login-cart {
+      gap: 1rem;
+    }
+  }
+  
+  /* Estilos responsivos para móviles */
+  @media (max-width: 576px) {
+    .navbar {
+      flex-direction: column;
+      padding: 1rem;
+      gap: 1rem;
+    }
+  
+    .nav-menu {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  
+    .nav-menu li::after {
+      bottom: -2px;
+    }
+  }
