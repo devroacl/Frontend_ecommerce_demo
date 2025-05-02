@@ -7,6 +7,7 @@ import RoleRoute from './components/Auth/RoleRoute';
 import { ThemeProvider } from './context/themeContext';
 import { AuthProvider } from './context/authContext';
 import { CartProvider } from './context/cartContext';
+import Navbar from './components/Navbar/Navbar'
 
 
 function App() { // <-- Declaración correcta del componente
