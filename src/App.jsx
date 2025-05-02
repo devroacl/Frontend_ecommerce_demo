@@ -1,39 +1,70 @@
-import './App.css'
-import Nosotros from './components/Nosotros/Nosotros'
-import Navbar from './components/Navbar/Navbar'
-import Footer from './components/Footer/Footer'
-import { ThemeProvider } from './context/themeContext'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Tienda from './pages/Tienda'
-import Hombre from './pages/Hombre'
-import Mujer from './pages/Mujer'
-import Ninos from './pages/Ninos'
+// App.jsx
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import PrivateRoute from './components/Auth/PrivateRoute';
+import RoleRoute from './components/Auth/RoleRoute';
 
-function App() {
+// App.jsx
+import { ThemeProvider } from './context/themeContext';
+import { AuthProvider } from './context/authContext';
+import { CartProvider } from './context/cartContext';
 
 
+function App() { // <-- Declaración correcta del componente
   return (
-    <>
     <ThemeProvider>
-        <div className="App">
-          <Navbar />
+      <AuthProvider>
+        <CartProvider>
+          <BrowserRouter>
+            <Navbar />
             <Routes>
-              {/* Anidamos los demás componentes que van a actuar como rutas en <Routes> y cada uno como <Route> */}
-                <Route path='/tienda' element={<Tienda />}></Route>
+              {/* ------------------ RUTAS PÚBLICAS ------------------ */}
+              <Route path="/" element={<Navigate to="/tienda" />} />
+              <Route path="/tienda" element={<Tienda />} />
+              <Route path="/hombre" element={<Hombre />} />
+              <Route path="/mujer" element={<Mujer />} />
+              <Route path="/ninos" element={<Ninos />} />
+              <Route path="/nosotros" element={<Nosotros />} />
+              <Route path="/contacto" element={<Contacto />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/registro" element={<RegisterPage />} />
+              <Route path="/producto/:id" element={<ProductoDetalle />} />
 
-                <Route path='/hombre' element={<Hombre />}></Route>
-                <Route path='/mujer' element={<Mujer />}></Route>
-                <Route path='/ninos' element={<Ninos />}></Route>
-           
-                <Route path='/nosotros' element={<Nosotros />}></Route>
-             
-            {/* Otros componentes */}
+              {/* ------------------ RUTAS PRIVADAS ------------------ */}
+              {/* Ruta base para usuarios autenticados */}
+              <Route element={<PrivateRoute />}>
+                {/* Dashboard Comprador */}
+                <Route element={<RoleRoute allowedRoles={['ROLE_COMPRADOR']} />}>
+                  <Route path="/mi-cuenta" element={<CompradorDashboard />} />
+                  <Route path="/mis-pedidos" element={<PedidosHistory />} />
+                  <Route path="/carrito" element={<CarritoPage />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                </Route>
+
+                {/* Dashboard Vendedor */}
+                <Route element={<RoleRoute allowedRoles={['ROLE_VENDEDOR']} />}>
+                  <Route path="/panel-vendedor" element={<VendedorDashboard />}>
+                    <Route index element={<ProductosVendedor />} />
+                    <Route path="productos" element={<ProductosVendedor />} />
+                    <Route path="ventas" element={<VentasVendedor />} />
+                    <Route path="estadisticas" element={<EstadisticasVendedor />} />
+                  </Route>
+                </Route>
+
+                {/* Ruta para admin (si es necesario) */}
+                <Route element={<RoleRoute allowedRoles={['ROLE_ADMIN']} />}>
+                  <Route path="/admin" element={<AdminDashboard />} />
+                </Route>
+              </Route>
+
+              {/* ------------------ MANEJO DE ERRORES ------------------ */}
+              <Route path="/no-autorizado" element={<Error403 />} />
+              <Route path="*" element={<Error404 />} />
             </Routes>
-          <Footer />
-        </div>
-      </ThemeProvider>
-    </>
-  )
+            <Footer />
+          </BrowserRouter>
+        </CartProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }
-
-export default App
+export default App;
