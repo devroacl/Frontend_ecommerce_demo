@@ -1,28 +1,82 @@
-// src/pages/LoginPage.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import LoginForm from '../components/Auth/LoginForm';
+import { useState } from 'react';
+import { useAuth } from "../context/authContext";
+import { useNavigate } from 'react-router-dom';
 
-export default function LoginPage() {
+const LoginForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [formError, setFormError] = useState('');
+  const { login, error: authError, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormError('');
+    
+    // Validación básica del formulario
+    if (!email || !password) {
+      setFormError('Por favor, completa todos los campos');
+      return;
+    }
+
+    try {
+      // Llamada a la función login del contexto
+      await login(email, password);
+      
+      // Si el login es exitoso, redirigir a la página principal
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      // El error ya se maneja en el contexto de autenticación
+    }
+  };
+
   return (
-    <div className="login-page min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Inicia sesión en tu cuenta
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            ¿No tienes cuenta?{' '}
-            <Link 
-              to="/registro" 
-              className="font-medium text-green-600 hover:text-green-500"
-            >
-              Regístrate aquí
-            </Link>
-          </p>
+    <div className="login-form-container">
+      <h2>Iniciar sesión</h2>
+      
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Ingresa tu correo"
+            required
+          />
         </div>
-        <LoginForm />
-      </div>
+        
+        <div className="form-group">
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Ingresa tu contraseña"
+            required
+          />
+        </div>
+
+        {/* Mostrar errores del formulario o del contexto de autenticación */}
+        {(formError || authError) && (
+          <div className="error-message">
+            {formError || authError}
+          </div>
+        )}
+        
+        <button 
+          type="submit" 
+          className="login-button"
+          disabled={loading}
+        >
+          {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+        </button>
+      </form>
     </div>
   );
-}
+};
+
+export default LoginForm;
