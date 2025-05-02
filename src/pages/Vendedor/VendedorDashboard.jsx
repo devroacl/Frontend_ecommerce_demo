@@ -1,7 +1,7 @@
 // pages/VendedorDashboard.jsx
 import { useEffect, useState } from 'react';
-import { productoService } from '../service/productoService';
-import { useAuth } from '../context/authContext';
+import { productoService } from "../../service/productoService";
+import { useAuth } from '../../context/authContext';
 
 export default function VendedorDashboard() {
   const [productos, setProductos] = useState([]);

@@ -1,7 +1,7 @@
 // src/pages/Checkout.jsx
 import React from 'react';
-import { useCart } from '../context/cartContext';
-import api from '../api/api';
+import { useCart } from '../../context/cartContext';
+import api from '../../api/api';
 
 export default function Checkout() {
   const { cart, dispatch } = useCart();

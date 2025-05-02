@@ -1,7 +1,6 @@
 import React from "react";
 import GridProducto from "../components/Producto/GridProducto";
 import { useTheme } from "../context/themeContext";
-import { minHeight } from "@mui/system";
 
 
 export default function Tienda() {
@@ -12,7 +11,6 @@ export default function Tienda() {
         <section
             style={{
                 backgroundColor: colors.background,
-                minHeight: "80vh",
                 display: "flex",
                 flexDirection: "column"
             }}>

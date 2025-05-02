@@ -1,10 +1,15 @@
+import api from '../api/api';
+
 export const productoService = {
-    getByVendedor: async () => {
-      return api.get('/api/productos/mis-productos');
-    },
-    crearProducto: async (formData) => {
-      return api.post('/api/productos', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-    }
-  };
+  getAll: async () => {
+    const response = await api.get("/productos/lista");
+    return response.data;
+  },
+  
+  getByCategory: async (categoria) => {
+    const response = await api.get("/productos/lista");
+    return response.data.filter(
+      producto => producto.categoria?.nombre === categoria.toUpperCase()
+    );
+  }
+};
