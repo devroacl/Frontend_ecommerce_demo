@@ -1,25 +1,36 @@
-//Acá inicializamos axios
-import axios from "axios";
+import axios from 'axios';
 
-//Creamos la instancia con la configuración de nuestra ruta base
 const api = axios.create({
-    //Acepta atributos como ruta base para las peticiones
-    baseURL: "http://localhost:8080",
-    //Configuramos metadatos para la cabecera de las peticiones que lleva el tipo de contenido
-    headers: {
-        "Content-Type": "application/json"
-    }
+  baseURL: import.meta.env.VITE_API_URL || '/api',
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
-
-// Interceptores para incluir token
-api.interceptors.request.use(config => {
+// Interceptor para añadir el token a las peticiones
+api.interceptors.request.use(
+  (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
-  });
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-//Exportamos nuestra instancia de axios
+// Interceptor para manejar errores
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
