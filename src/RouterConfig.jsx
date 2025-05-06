@@ -1,8 +1,8 @@
 import { lazy, Suspense, useContext } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
-import AuthContext from '@context/AuthContext';
-import Layout from '@components/common/Layout';
+import {AuthContext} from '../src/context/AuthContext';
+import {Layout} from '../src/components/common/Layout';
 
 // Lazy loading con prefijo absoluto usando alias Vite
 const HomePage = lazy(() => import('@/pages/public/HomePage'));
