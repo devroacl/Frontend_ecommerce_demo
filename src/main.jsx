@@ -1,38 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import './App.css';
-
-// Configuración de Emotion (para MUI)
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
-const emotionCache = createCache({
-  key: 'css',
-  prepend: true,
-});
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
+import store from './store/store';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CacheProvider value={emotionCache}>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
-    </CacheProvider>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
