@@ -1,18 +1,22 @@
+// Home.jsx
+import React from 'react';
 import { useEffect } from 'react';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductCard from '../components/ProductCard';
-import { getProducts } from '../api/products';
+import { fetchProducts } from '../store/productsSlice'; 
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
+  const { products, status } = useSelector((state) => state.products);
 
   useEffect(() => {
-    getProducts().then((response) => {
-      // Dispatch para guardar en el estado (agregar slice de productos si es necesario)
-    });
-  }, []);
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+  if (status === 'loading') {
+    return <CircularProgress sx={{ display: 'block', margin: '2rem auto' }} />;
+  }
 
   return (
     <Container sx={{ py: 4 }}>

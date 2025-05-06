@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import React from 'react';
 import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar'; // Importar Navbar
+import Navbar from './components/Navbar';
 // Importar todos los componentes de página
 import Home from './pages/Home';
 import Productos from './pages/Productos';
@@ -12,10 +13,12 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Dashboard from './pages/Dashboard';
 
-// Agregar export default
+import { useSelector } from 'react-redux';
+
 export default function App() {
+  const cartItems = useSelector((state) => state.cart.items); // Obtener del store
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -34,6 +37,6 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }

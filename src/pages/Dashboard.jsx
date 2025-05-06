@@ -4,6 +4,7 @@ import ProductCard from '../components/ProductCard';
 import { getMisProductos, createProduct } from '../api/products';
 import NewProductDialog from '../components/NewProductDialog';
 
+
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
