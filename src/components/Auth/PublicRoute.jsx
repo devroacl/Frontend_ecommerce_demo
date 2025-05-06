@@ -1,21 +1,9 @@
 import { useSelector } from 'react-redux';
-import { Navigate, useLocation } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import { Navigate, Outlet } from 'react-router-dom';
 
-const PublicRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useSelector(state => state.auth);
-  const location = useLocation();
-
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (isAuthenticated) {
-    const redirectTo = location.state?.from?.pathname || '/';
-    return <Navigate to={redirectTo} replace />;
-  }
-
-  return children;
+const PublicRoute = () => {
+  const { isAuthenticated } = useSelector(state => state.auth);
+  return !isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default PublicRoute;
