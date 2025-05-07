@@ -1,51 +1,44 @@
 import { useState, useEffect } from 'react';
+
+import { Link } from 'react-router-dom';
 import { Container, Typography, Button, Grid, CircularProgress } from '@mui/material';
 import ProductCard from '../components/ProductCard';
-import { getMisProductos, createProduct } from '../api/products';
-import NewProductDialog from '../components/NewProductDialog';
-
+import { fetchProducts } from '../api/products';
+import { useSelector } from 'react-redux';
 
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false);
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await getMisProductos(user.token);
+        const response = await fetchProducts(user.token);
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error loading products:', error);
+        console.error('Error:', error);
         setLoading(false);
       }
     };
     loadProducts();
   }, [user.token]);
 
-  const handleCreateProduct = async (productData) => {
-    try {
-      const response = await createProduct(productData, user.token);
-      setProducts([...products, response.data]);
-      setOpenDialog(false);
-    } catch (error) {
-      console.error('Error creating product:', error);
-    }
-  };
-
   return (
     <Container sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
-        <Typography variant="h4">Mis Productos</Typography>
-        <Button
-          variant="contained"
-          onClick={() => setOpenDialog(true)}
-        >
-          Nuevo Producto
-        </Button>
-      </Box>
+      <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
+        Mis Productos Publicados
+      </Typography>
+      
+      <Button
+        component={Link}
+        to="/nuevo-producto"
+        variant="contained"
+        sx={{ mb: 4 }}
+      >
+        Nuevo Producto
+      </Button>
 
       {loading ? (
         <CircularProgress />
@@ -58,12 +51,6 @@ export default function Dashboard() {
           ))}
         </Grid>
       )}
-
-      <NewProductDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        onSubmit={handleCreateProduct}
-      />
     </Container>
   );
 }

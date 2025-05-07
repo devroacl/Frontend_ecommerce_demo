@@ -12,30 +12,33 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Dashboard from './pages/Dashboard';
-
+import NewProduct from './pages/NewProduct'; 
 import { useSelector } from 'react-redux';
 
 export default function App() {
-  const cartItems = useSelector((state) => state.cart.items); // Obtener del store
+  const cartItems = useSelector((state) => state.cart.items);
+  
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<Productos />} />
-        <Route path="/productos/:id" element={<ProductDetail />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        
-        <Route element={<ProtectedRoute allowedRoles={['ROLE_COMPRADOR']} />}>
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Route>
-        
-        <Route element={<ProtectedRoute allowedRoles={['ROLE_VENDEDOR']} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
+        {/* Rutas públicas */}
+  <Route path="/" element={<Home />} />
+  <Route path="/productos" element={<Productos />} />
+  <Route path="/about" element={<AboutUs />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} /> {/* ✅ Ruta pública */}
+
+  {/* Rutas protegidas */}
+  <Route element={<ProtectedRoute allowedRoles={['ROLE_COMPRADOR']} />}>
+    <Route path="/cart" element={<Cart />} />
+    <Route path="/checkout" element={<Checkout />} />
+  </Route>
+
+  <Route element={<ProtectedRoute allowedRoles={['ROLE_VENDEDOR']} />}>
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/nuevo-producto" element={<NewProduct />} />
+  </Route>
       </Routes>
     </>
   );
