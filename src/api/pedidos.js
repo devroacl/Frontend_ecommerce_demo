@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://prod-backendecomarket.onrender.com/api';
+const API_URL = 'https://prod-backendecomarket-def.onrender.com/api';
 
 export const getMisPedidos = async (token) => {
   return await axios.get(`${API_URL}/pedidos/mis-pedidos`, {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://prod-backendecomarket.onrender.com/api'; // Asegúrate que coincida con tu backend
+const API_URL = 'https://prod-backendecomarket-def.onrender.com/api'; // Asegúrate que coincida con tu backend
 
 export const fetchCategories = async () => {
   try {

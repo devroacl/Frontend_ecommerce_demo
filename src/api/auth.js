@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://prod-backendecomarket.onrender.com/api';
+const API_URL = 'https://prod-backendecomarket-def.onrender.com/api';
 
 // Configuración global para axios
 axios.defaults.timeout = 30000; // 30 segundos de timeout
