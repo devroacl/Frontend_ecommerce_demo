@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Grid, TextField, Typography, CircularProgress } from '@mui/material';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../api/products';

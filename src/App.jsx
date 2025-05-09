@@ -5,7 +5,7 @@ import Navbar from './components/Navbar';
 // Importar todos los componentes de página
 import Home from './pages/Home';
 import Productos from './pages/Productos';
-import ProductDetail from './pages/ProductDetail';
+//import ProductDetail from './pages/ProductDetail';
 import AboutUs from './pages/AboutUs';
 import Login from './pages/Login';
 import Register from './pages/Register';

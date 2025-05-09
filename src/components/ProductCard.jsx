@@ -1,33 +1,21 @@
-import { Card, CardMedia, CardContent, Button, Typography } from '@mui/material';
-import { AddShoppingCart } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../store/cartSlice';
+import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 
 export default function ProductCard({ product }) {
-  const dispatch = useDispatch();
-
   return (
-    <Card sx={{ maxWidth: 345, m: 2 }}>
+    <Card>
       <CardMedia
         component="img"
-        height="200"
-        image={product.imagen || '/placeholder.jpg'}
-        alt={product.nombre}
+        height="140"
+        image={product.image || 'https://via.placeholder.com/150'}
+        alt={product.name}
       />
       <CardContent>
-        <Typography gutterBottom variant="h5">{product.nombre}</Typography>
-        <Typography variant="body2" color="text.secondary">
-          ${product.precio?.toLocaleString()}
+        <Typography gutterBottom variant="h5">
+          {product.name}
         </Typography>
-        <Button 
-          fullWidth
-          variant="contained" 
-          startIcon={<AddShoppingCart />}
-          onClick={() => dispatch(addToCart(product))}
-          sx={{ mt: 2 }}
-        >
-          Añadir al carrito
-        </Button>
+        <Typography color="text.secondary">
+          ${product.price}
+        </Typography>
       </CardContent>
     </Card>
   );

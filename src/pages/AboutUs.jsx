@@ -1,3 +1,7 @@
+
+// 1. Corregir AboutUs.jsx - Añadir la importación de React
+// AboutUs.jsx
+import React from 'react';
 import { Grid, Typography, Card, CardMedia, CardContent } from '@mui/material';
 
 const team = [
