@@ -15,7 +15,10 @@ import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../store/authSlice';
 
 function Login() {
-  const [credentials, setCredentials] = useState({ correo: '', contrasena: '' });
+  const [credentials, setCredentials] = useState({ 
+    correo: '', 
+    contrasena: '' 
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,18 +35,21 @@ function Login() {
     setError('');
     
     try {
-      // Añadimos un timeout para esperar la respuesta de Render
-      const userData = await Promise.race([
-        loginApi(credentials),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Tiempo de espera agotado')), 40000)
-        )
-      ]);
+      const userData = await loginApi({
+        correo: credentials.correo,
+        contrasena: credentials.contrasena
+      });
       
       dispatch(loginSuccess(userData));
       
       // Redirigir según el rol del usuario
-      navigate(userData.rol === 'ROLE_VENDEDOR' ? '/dashboard' : '/');
+      if (userData.rol === 'ROLE_VENDEDOR') {
+        navigate('/dashboard');
+      } else if (userData.rol === 'ROLE_ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       console.error('Error de inicio de sesión:', err);
       
@@ -72,9 +78,18 @@ function Login() {
             Iniciar Sesión
           </Typography>
           
-          {error && <Alert severity="error" sx={{ width: '100%', mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+              {error}
+            </Alert>
+          )}
           
-          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+          <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{ width: '100%' }}
+            noValidate
+          >
             <TextField
               margin="normal"
               required

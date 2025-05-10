@@ -1,14 +1,18 @@
 import axios from 'axios';
 
-const API_URL = 'https://prod-backendecomarket-def.onrender.com/api';
+const API_URL = 'https://prod-backendecomarket-def.onrender.com/api/auth';
 
-// Configuración global para axios
-axios.defaults.timeout = 30000; // 30 segundos de timeout
+// Configura axios para incluir credenciales
+axios.defaults.withCredentials = true;
 
-// Función para registrar un nuevo usuario
 export const register = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/auth/registro`, userData);
+    const response = await axios.post(`${API_URL}/registro`, userData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
     return response;
   } catch (error) {
     console.error('Error en el registro:', error);
@@ -16,15 +20,16 @@ export const register = async (userData) => {
   }
 };
 
-// Función para iniciar sesión
 export const login = async (credentials) => {
   try {
-    const response = await axios.post(`${API_URL}/auth/login`, credentials);
+    const response = await axios.post(`${API_URL}/login`, credentials, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
     if (response.data && response.data.token) {
-      // Guardar datos de usuario en localStorage
       localStorage.setItem('user', JSON.stringify(response.data));
-      
-      // También podemos configurar el token para futuras solicitudes
       setAuthToken(response.data.token);
     }
     return response.data;
@@ -34,14 +39,6 @@ export const login = async (credentials) => {
   }
 };
 
-// Función para cerrar sesión
-export const logout = () => {
-  localStorage.removeItem('user');
-  // Limpiar el token de autorización
-  delete axios.defaults.headers.common['Authorization'];
-};
-
-// Función para configurar el token de autorización en axios
 export const setAuthToken = (token) => {
   if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -50,18 +47,7 @@ export const setAuthToken = (token) => {
   }
 };
 
-// Función para verificar si el usuario está autenticado
-export const isAuthenticated = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  return !!user && !!user.token;
-};
-
-// Función para obtener el usuario actual
-export const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem('user'));
-};
-
-// Inicializar el token si el usuario ya está autenticado
+// Inicializar token si existe
 const user = JSON.parse(localStorage.getItem('user'));
 if (user && user.token) {
   setAuthToken(user.token);

@@ -1,4 +1,3 @@
-// Register.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
@@ -20,15 +19,16 @@ import { register } from '../api/auth';
 
 function Register() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
+    correo: '',
+    contrasena: '',
+    nombre: '',
+    apellido: '',
     rut: '',
-    userType: 'COMPRADOR'
+    tipoUsuario: 'COMPRADOR'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -39,61 +39,51 @@ function Register() {
     });
   };
 
-  // Función para formatear RUT chileno
-  const formatearRut = (rutInput) => {
-    // Eliminar puntos y guiones
-    let rut = rutInput.replace(/\./g, '').replace(/-/g, '').trim();
-    
-    // Separar número y dígito verificador
-    let rutNumero = rut.slice(0, -1);
-    let dv = rut.slice(-1).toUpperCase();
-    
-    // Formatear con puntos y guión
-    let resultado = '';
-    for (let i = rutNumero.length; i > 0; i -= 3) {
-      const start = Math.max(0, i - 3);
-      resultado = rutNumero.substring(start, i) + (resultado ? '.' + resultado : '');
-    }
-    
-    return resultado + '-' + dv;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess(false);
     
     try {
-      const formattedRut = formatearRut(formData.rut);
-      
+      // Preparamos los datos exactamente como los espera el backend
       const userData = {
-        correo: formData.email,
-        contrasena: formData.password,
-        nombre: formData.firstName,
-        apellido: formData.lastName,
-        rut: formattedRut,
-        tipoUsuario: formData.userType
+        correo: formData.correo,
+        contrasena: formData.contrasena,
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        rut: formData.rut, // El backend se encarga del formateo
+        tipoUsuario: formData.tipoUsuario
       };
       
       const response = await register(userData);
-      console.log('Registro exitoso:', response.data);
       
-      // Redirigir a login después del registro exitoso
-      navigate('/login');
-    } catch (err) {
-      console.error('Error durante el registro:', err);
-      
-      // Manejar diferentes tipos de errores
-      if (err.response) {
-        // El servidor respondió con un código de error
-        setError(err.response.data.error || 'Error en el registro. Por favor, intenta nuevamente.');
-      } else if (err.request) {
-        // La solicitud fue hecha pero no se recibió respuesta
-        setError('No se pudo conectar con el servidor. Por favor, verifica tu conexión e intenta nuevamente.');
-      } else {
-        // Error al configurar la solicitud
-        setError('Error al procesar tu solicitud. Por favor, intenta nuevamente.');
+      if (response.status === 201) {
+        setSuccess(true);
+        // Redirigir después de 2 segundos para que el usuario vea el mensaje
+        setTimeout(() => navigate('/login'), 2000);
       }
+    } catch (err) {
+      let errorMessage = 'Error durante el registro';
+      
+      if (err.response) {
+        // Si el backend devuelve un mensaje de error específico
+        if (err.response.data?.error) {
+          errorMessage = err.response.data.error;
+        }
+        
+        // Manejo especial para errores de RUT
+        if (err.response.data?.detalle) {
+          errorMessage += `: ${err.response.data.detalle}`;
+        }
+      } else if (err.request) {
+        errorMessage = 'No se pudo conectar con el servidor. Verifica tu conexión.';
+      } else {
+        errorMessage = 'Error al procesar tu solicitud. Intenta nuevamente.';
+      }
+      
+      setError(errorMessage);
+      console.error('Error detallado:', err);
     } finally {
       setLoading(false);
     }
@@ -106,30 +96,42 @@ function Register() {
           Registro de Usuario
         </Typography>
         
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            ¡Registro exitoso! Redirigiendo al login...
+          </Alert>
+        )}
         
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="firstName"
+            id="nombre"
             label="Nombre"
-            name="firstName"
-            value={formData.firstName}
+            name="nombre"
+            value={formData.nombre}
             onChange={handleChange}
             autoFocus
+            inputProps={{ maxLength: 50 }}
           />
           
           <TextField
             margin="normal"
             required
             fullWidth
-            id="lastName"
+            id="apellido"
             label="Apellido"
-            name="lastName"
-            value={formData.lastName}
+            name="apellido"
+            value={formData.apellido}
             onChange={handleChange}
+            inputProps={{ maxLength: 50 }}
           />
           
           <TextField
@@ -142,38 +144,41 @@ function Register() {
             value={formData.rut}
             onChange={handleChange}
             helperText="Ejemplo: 12345678K"
+            inputProps={{ maxLength: 12 }}
           />
           
           <TextField
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="correo"
             label="Correo electrónico"
-            name="email"
+            name="correo"
             type="email"
-            value={formData.email}
+            value={formData.correo}
             onChange={handleChange}
+            inputProps={{ maxLength: 100 }}
           />
           
           <TextField
             margin="normal"
             required
             fullWidth
-            id="password"
+            id="contrasena"
             label="Contraseña"
-            name="password"
+            name="contrasena"
             type="password"
-            value={formData.password}
+            value={formData.contrasena}
             onChange={handleChange}
-            helperText="Mínimo 6 caracteres"
+            helperText="Mínimo 6 caracteres, máximo 15"
+            inputProps={{ minLength: 6, maxLength: 15 }}
           />
           
           <FormControl component="fieldset" margin="normal">
             <FormLabel component="legend">Tipo de Usuario</FormLabel>
             <RadioGroup
-              name="userType"
-              value={formData.userType}
+              name="tipoUsuario"
+              value={formData.tipoUsuario}
               onChange={handleChange}
               row
             >

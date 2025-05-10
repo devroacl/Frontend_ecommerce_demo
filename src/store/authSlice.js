@@ -1,4 +1,3 @@
-// authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
 
@@ -14,8 +13,10 @@ const authSlice = createSlice({
     loginSuccess(state, action) {
       const decoded = jwtDecode(action.payload.token);
       state.user = {
-        ...action.payload,
-        role: decoded.roles[0]
+        token: action.payload.token,
+        id: action.payload.id,
+        correo: action.payload.correo,
+        rol: action.payload.rol // Usamos el rol que viene directamente de la respuesta
       };
     },
     logout(state) {
@@ -25,6 +26,5 @@ const authSlice = createSlice({
   }
 });
 
-// Exportar los action creators
-export const { loginSuccess, logout } = authSlice.actions; // ✅ Exportación CORRECTA
+export const { loginSuccess, logout } = authSlice.actions;
 export default authSlice.reducer;
