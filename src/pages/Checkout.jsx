@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom'; // Added missing import
 import { Container, Typography, Button, List, ListItem, Divider, CircularProgress } from '@mui/material';
-import { confirmarPedido } from '../api/pedidos';
+import orderService from '../api/orderService'; // Changed to import the default export
 import { clearCart } from '../store/cartSlice';
 
 export default function Checkout() {
@@ -17,8 +18,9 @@ export default function Checkout() {
   const handleConfirm = async () => {
     setLoading(true);
     try {
-      const response = await confirmarPedido(user.token);
-      setOrderId(response.data.id);
+      // Changed to use orderService.confirmarPedido
+      const response = await orderService.confirmarPedido(user.token);
+      setOrderId(response.id); // Removed .data since your service returns response.data
       dispatch(clearCart());
     } catch (error) {
       console.error('Error confirming order:', error);

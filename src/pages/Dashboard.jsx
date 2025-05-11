@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
-
 import { Link } from 'react-router-dom';
 import { Container, Typography, Button, Grid, CircularProgress } from '@mui/material';
 import ProductCard from '../components/ProductCard';
-import { fetchProducts } from '../api/products';
+import productService from '../api/productService'; // Importación corregida
 import { useSelector } from 'react-redux';
 
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useSelector((state) => state.auth);
-
+  
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await fetchProducts(user.token);
-        setProducts(response.data);
+        // Usando el método getMyProducts en lugar de fetchProducts
+        const data = await productService.getMyProducts();
+        setProducts(data);
         setLoading(false);
       } catch (error) {
         console.error('Error:', error);
@@ -23,7 +23,7 @@ export default function Dashboard() {
       }
     };
     loadProducts();
-  }, [user.token]);
+  }, [user?.token]); // Añadido el opcional "?" para evitar errores si user es null
 
   return (
     <Container sx={{ py: 4 }}>
@@ -39,7 +39,7 @@ export default function Dashboard() {
       >
         Nuevo Producto
       </Button>
-
+    
       {loading ? (
         <CircularProgress />
       ) : (

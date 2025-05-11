@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -10,7 +11,7 @@ import {
   Alert,
   Paper
 } from '@mui/material';
-import { login as loginApi } from '../api/auth';
+import authService from '../api/authService'; // Changed to import the default export
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../store/authSlice';
 
@@ -35,7 +36,7 @@ function Login() {
     setError('');
     
     try {
-      const userData = await loginApi({
+      const userData = await authService.login({ // Changed to use authService.login
         correo: credentials.correo,
         contrasena: credentials.contrasena
       });

@@ -1,19 +1,20 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { 
-  AppBar, 
-  Toolbar, 
-  Button, 
-  IconButton, 
-  Badge 
+import authService from '../api/authService'; // Changed to import the default export
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+  Badge
 } from '@mui/material';
 import { ShoppingCart } from '@mui/icons-material';
 
 export default function Navbar() {
   const { user } = useSelector((state) => state.auth);
   const cartItems = useSelector((state) => state.cart.items);
-
+  
   return (
     <AppBar position="sticky">
       <Toolbar>

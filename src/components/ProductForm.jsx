@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { 
   TextField, 
@@ -12,8 +13,8 @@ import {
   Snackbar,
   Alert 
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { createProduct } from '../api/products';
+import { useSelector } from 'react-redux';
+import productService from '../api/productService'; // Importación corregida
 import { fetchCategories } from '../api/categories'; // Asumiendo endpoint GET /api/categorias
 
 export default function ProductForm() {
@@ -47,16 +48,9 @@ export default function ProductForm() {
     e.preventDefault();
     setLoading(true);
     
-    const formPayload = new FormData();
-    formPayload.append('nombre', formData.nombre);
-    formPayload.append('descripcion', formData.descripcion);
-    formPayload.append('precio', formData.precio);
-    formPayload.append('stock', formData.stock);
-    formPayload.append('categoriaId', formData.categoriaId);
-    if (formData.imagen) formPayload.append('imagen', formData.imagen);
-
+    // No necesitamos crear un FormData aquí porque productService.createProduct ya lo hace
     try {
-      await createProduct(formPayload, user.token);
+      await productService.createProduct(formData);
       setSuccess(true);
       setFormData({
         nombre: '',

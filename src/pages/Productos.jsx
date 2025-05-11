@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Grid, TextField, Typography, CircularProgress } from '@mui/material';
 import ProductCard from '../components/ProductCard';
-import { getProducts } from '../api/products';
+import productService from '../api/productService'; // Changed to import the default export
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Productos() {
@@ -14,9 +14,10 @@ export default function Productos() {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await getProducts();
-        // Dispatch para guardar en el estado (asumiendo un slice de productos)
-        setFilteredProducts(response.data);
+        // Using getAvailableProducts from the imported service
+        const response = await productService.getAvailableProducts();
+        // Since getAvailableProducts already returns response.data, we don't need .data here
+        setFilteredProducts(response);
         setLoading(false);
       } catch (error) {
         console.error('Error loading products:', error);

@@ -15,7 +15,7 @@ import {
   Alert,
   Paper
 } from '@mui/material';
-import { register } from '../api/auth';
+import authService from '../api/authService'; // Changed to import the default export
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -56,7 +56,7 @@ function Register() {
         tipoUsuario: formData.tipoUsuario
       };
       
-      const response = await register(userData);
+      const response = await authService.register(userData); // Changed to use authService.register
       
       if (response.status === 201) {
         setSuccess(true);
